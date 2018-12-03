@@ -1,5 +1,5 @@
 {
-  "name": "graphql-sequelize",
+  "name": "@truebill/graphql-sequelize",
   "version": "8.3.1",
   "description": "GraphQL & Relay for MySQL & Postgres via Sequelize",
   "main": "lib/index.js",
