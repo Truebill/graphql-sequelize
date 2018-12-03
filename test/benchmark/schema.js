@@ -11,7 +11,7 @@ import {
   globalIdField,
   connectionDefinitions,
   connectionArgs
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 import resolver from '../../lib/resolver';
 

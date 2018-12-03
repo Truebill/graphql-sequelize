@@ -20,7 +20,7 @@ import {
 
 import {
   toGlobalId
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 describe('attributeFields', function () {
   var Model;

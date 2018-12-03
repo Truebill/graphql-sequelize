@@ -27,7 +27,7 @@ import {
   fromGlobalId,
   connectionDefinitions,
   connectionArgs
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 function generateTask(id) {
   return {

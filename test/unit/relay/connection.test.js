@@ -12,7 +12,7 @@ import {
 
 import {
   globalIdField
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 import {
   sequelizeConnection

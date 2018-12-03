@@ -1,6 +1,6 @@
 import * as typeMapper from './typeMapper';
 import { GraphQLNonNull, GraphQLEnumType } from 'graphql';
-import { globalIdField } from 'graphql-relay';
+import { globalIdField } from '@truebill/graphql-relay';
 
 module.exports = function (Model, options = {}) {
   var cache = options.cache || {};

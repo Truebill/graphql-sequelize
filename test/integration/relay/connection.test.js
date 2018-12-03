@@ -26,7 +26,7 @@ import {
   globalIdField,
   toGlobalId,
   fromGlobalId
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 describe('relay', function () {
   describe('connection', function () {

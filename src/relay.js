@@ -4,7 +4,7 @@ import {
   nodeDefinitions,
   connectionDefinitions,
   connectionArgs
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 import {
   GraphQLList

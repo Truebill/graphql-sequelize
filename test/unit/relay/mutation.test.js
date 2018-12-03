@@ -29,7 +29,7 @@ import {
   toGlobalId,
   fromGlobalId,
   mutationWithClientMutationId
-} from 'graphql-relay';
+} from '@truebill/graphql-relay';
 
 describe('relay', function () {
   describe('mutation', function () {
