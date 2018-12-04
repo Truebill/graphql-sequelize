@@ -1,7 +1,7 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLList } from 'graphql';
 import _ from 'lodash';
 import argsToFindOptions from './argsToFindOptions';
-import { isConnection, handleConnection, nodeType } from './relay';
+import { isConnection, handleConnection, nodeType, getInnerType } from './relay';
 import invariant from 'assert';
 import Promise from 'bluebird';
 
@@ -35,10 +35,9 @@ function resolverFactory(targetMaybeThunk, options = {}) {
       , isAssociation = !!target.associationType
       , association = isAssociation && target
       , model = isAssociation && target.target || isModel && target
-      , type = info.returnType
+      , type = getInnerType(info.returnType)
       , list = options.list ||
-        type instanceof GraphQLList ||
-        type instanceof GraphQLNonNull && type.ofType instanceof GraphQLList;
+        type instanceof GraphQLList;
 
     let targetAttributes = Object.keys(model.rawAttributes)
       , findOptions = argsToFindOptions(args, targetAttributes);
@@ -66,6 +65,14 @@ function resolverFactory(targetMaybeThunk, options = {}) {
       findOptions[as] = context[key];
     });
 
+    function handleResult(result) {
+      if (options.handleConnection && isConnection(getInnerType(info.returnType))) {
+        return handleConnection(result, args);
+      }
+      return result;
+    }
+
+
     return Promise.resolve(options.before(findOptions, args, context, info)).then(function (findOptions) {
       if (args.where && !_.isEmpty(info.variableValues)) {
         whereQueryVarsToValues(args.where, info.variableValues);
@@ -79,23 +86,13 @@ function resolverFactory(targetMaybeThunk, options = {}) {
       if (association) {
         if (source.get(association.as) !== undefined) {
           // The user did a manual include
-          const result = source.get(association.as);
-          if (options.handleConnection && isConnection(info.returnType)) {
-            return handleConnection(result, args);
-          }
-
-          return result;
+          return handleResult(source.get(association.as));
         } else {
-          return source[association.accessors.get](findOptions).then(function (result) {
-            if (options.handleConnection && isConnection(info.returnType)) {
-              return handleConnection(result, args);
-            }
-            return result;
-          });
+          return source[association.accessors.get](findOptions).then(handleResult);
         }
       }
 
-      return model[list ? 'findAll' : 'findOne'](findOptions);
+      return model[list ? 'findAll' : 'findOne'](findOptions).then(handleResult);
     }).then(function (result) {
       return options.after(result, args, context, info);
     });

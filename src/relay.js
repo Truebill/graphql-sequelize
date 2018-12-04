@@ -7,7 +7,8 @@ import {
 } from '@truebill/graphql-relay';
 
 import {
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull,
 } from 'graphql';
 
 import {
@@ -105,8 +106,13 @@ export function createNodeInterface(sequelize) {
 
 export {createNodeInterface as sequelizeNodeInterface};
 
+export function getInnerType(innerType) {
+  return innerType instanceof GraphQLNonNull ? innerType.ofType : innerType;
+}
+
+
 export function nodeType(connectionType) {
-  return connectionType._fields.edges.type.ofType._fields.node.type;
+  return getInnerType(getInnerType(connectionType._fields.edges.type).ofType)._fields.node.type;
 }
 
 export function createConnectionResolver({
